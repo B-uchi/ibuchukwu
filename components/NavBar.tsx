@@ -49,9 +49,9 @@ const NavBar: React.FC<NavBarProps> = ({
   };
 
   return (
-    <>
+    <div className="flex w-full fixed bottom-5 md:bottom-4">
       <motion.nav
-        className={`fixed bottom-4 md:left-1/2 transform md:-translate-x-1/2 bg-gray-300 dark:text-white dark:bg-black/60 backdrop-blur-md rounded-full px-6 py-3 shadow-lg flex justify-between items-center w-screen md:w-[450px]`}
+        className={`bg-gray-300 dark:text-white dark:bg-black/60 backdrop-blur-md rounded-full px-6 py-3 shadow-lg flex justify-between items-center w-[90%] mx-auto md:w-[450px]`}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.5 }}
@@ -112,7 +112,7 @@ const NavBar: React.FC<NavBarProps> = ({
         </button>
       </motion.nav>
       <div className="fixed bottom-0 left-1/2 transform -translate-x-1/2 w-[80px] h-[3px] rounded-full mt-2 bg-[#b4aeae]"></div>
-    </>
+    </div>
   );
 };
 
