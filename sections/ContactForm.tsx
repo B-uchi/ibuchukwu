@@ -91,6 +91,10 @@ const ContactForm: React.FC<ContactFormProps> = ({
             if (audioRef.current && !gravityEnabled) {
               audioRef.current.currentTime = 0;
               audioRef.current.play();
+            } 
+            if (audioRef.current && gravityEnabled){
+              audioRef.current.pause();
+              audioRef.current.currentTime = 0;
             }
             setGravityEnabled((prev) => !prev);
           }}
