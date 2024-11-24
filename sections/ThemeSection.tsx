@@ -56,10 +56,10 @@ const ThemeSection: React.FC<ThemeSectionProps> = ({
         theme === "dark" ? "bg-[#121212]" : "bg-[#f4f4f4]"
       }`}
     >
-      <div className="absolute top-0 left-0 w-full h-full z-0 bg-transparent" />
-      <div className="relative z-10 flex items-center justify-between w-full px-[350px]">
+      {/* <div className="absolute top-0 left-0 w-full h-full z-0 bg-transparent" /> */}
+      <div className="relative z-10 flex md:flex-row flex-col items-center justify-between w-full px-0 lg:px-[350px]">
         <h1
-          className={`text-4xl sm:text-5xl ${
+          className={`text-4xl  sm:text-5xl ${
             theme == "light" ? "text-gray-500" : "text-white"
           } font-bold mb-4 font-parkinsans`}
         >
@@ -96,7 +96,7 @@ const ThemeSection: React.FC<ThemeSectionProps> = ({
             </div>
           )}
         </button>
-        <div className="absolute -rotate-45 -top-[0px] right-[42em] translate-x-[100%]">
+        <div className="absolute hidden md:block -rotate-45 -top-[0px] right-[42em] translate-x-[100%]">
           <Image
             src={theme == "dark" ? ArrowDark : ArrowLight}
             width={200}
