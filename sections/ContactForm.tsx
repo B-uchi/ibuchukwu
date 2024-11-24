@@ -3,6 +3,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight, Bomb, Wrench } from "lucide-react";
+import { alerta, ToastBox } from "alertajs";
+import emailjs from "@emailjs/browser";
 
 interface ContactFormProps {
   theme: "light" | "dark";
@@ -14,6 +16,10 @@ const ContactForm: React.FC<ContactFormProps> = ({
   setIsThemeSection,
 }) => {
   const [gravityEnabled, setGravityEnabled] = useState(false);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [message, setMessage] = useState("");
+  const [sending, setSending] = useState(false);
   const isDark = theme === "dark";
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const contactRef = useRef<HTMLDivElement>(null);
@@ -76,6 +82,47 @@ const ContactForm: React.FC<ContactFormProps> = ({
     audioRef.current = new Audio("/explode.mp3");
   }, []);
 
+  const sendEmail = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    try {
+      setSending(true);
+      emailjs.init({
+        publicKey: process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY,
+        blockHeadless: true,
+        limitRate: {
+          id: "app",
+          throttle: 10000,
+        },
+      });
+      if (!name || !email || !message) {
+        setSending(false);
+        return alerta.error("Please fill all fields!", { title: "Error!" });
+      }
+      if (
+        !process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID ||
+        !process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID
+      ) {
+        return alerta.error("EmailJS service ID and template ID not found!", {
+          title: "Error!",
+        });
+      }
+      await emailjs.send(
+        process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID,
+        process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID,
+        { from_name: name, reply_to: email, message: message }
+      );
+      alerta.success("Message sent successfully!", { title: "Hurray!" });
+    } catch (error) {
+      alerta.error("Couldn't send message", { title: "Oops!" });
+      console.log("Error sending email:", error);
+    } finally {
+      setSending(false);
+      setName("");
+      setEmail("");
+      setMessage("");
+    }
+  };
+
   return (
     <div
       ref={contactRef}
@@ -84,6 +131,7 @@ const ContactForm: React.FC<ContactFormProps> = ({
         isDark ? "bg-[#121212] text-white" : "bg-[#f4f4f4] text-gray-800"
       }`}
     >
+      <ToastBox position="top-right" />
       <div className="w-full max-w-6xl h-screen flex flex-col justify-center items-center lg:flex-row gap-8 lg:gap-16 relative">
         {/* Gravity Toggle */}
         <button
@@ -91,8 +139,8 @@ const ContactForm: React.FC<ContactFormProps> = ({
             if (audioRef.current && !gravityEnabled) {
               audioRef.current.currentTime = 0;
               audioRef.current.play();
-            } 
-            if (audioRef.current && gravityEnabled){
+            }
+            if (audioRef.current && gravityEnabled) {
               audioRef.current.pause();
               audioRef.current.currentTime = 0;
             }
@@ -100,7 +148,7 @@ const ContactForm: React.FC<ContactFormProps> = ({
           }}
           className={`absolute top-4 right-4 p-4 text-sm font-bold rounded-full ${
             isDark ? "bg-[#313131] text-white" : "bg-gray-300 text-gray-800"
-          } hover:scale-110 transition-all z-50`}
+          } hover:scale-110 transition-all z-10`}
         >
           {gravityEnabled ? <Wrench /> : <Bomb />}
         </button>
@@ -135,7 +183,7 @@ const ContactForm: React.FC<ContactFormProps> = ({
             initial="initial"
             animate="animate"
           >
-            <form className="space-y-6 font-josefin">
+            <form className="space-y-6 font-josefin" onSubmit={sendEmail}>
               {/* Name Input */}
               <motion.div
                 className="space-y-2"
@@ -144,6 +192,8 @@ const ContactForm: React.FC<ContactFormProps> = ({
                 <label className="text-sm font-medium block">Your Name</label>
                 <input
                   type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
                   placeholder="John Doe"
                   className={`w-full p-4 rounded-lg bg-transparent border ${
                     isDark
@@ -163,6 +213,8 @@ const ContactForm: React.FC<ContactFormProps> = ({
                 <label className="text-sm font-medium block">Your Email</label>
                 <input
                   type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   placeholder="johndoe@example.com"
                   className={`w-full p-4 rounded-lg bg-transparent border ${
                     isDark
@@ -184,6 +236,8 @@ const ContactForm: React.FC<ContactFormProps> = ({
                 </label>
                 <textarea
                   rows={5}
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
                   placeholder="What would you like to talk about...."
                   className={`w-full p-4 rounded-lg bg-transparent border ${
                     isDark
@@ -198,13 +252,12 @@ const ContactForm: React.FC<ContactFormProps> = ({
               {/* Submit Button */}
               <motion.button
                 type="submit"
-                className={`w-full p-4 text-lg font-bold rounded-lg bg-gradient-to-br ${
-                  isDark
-                    ? "from-blue-600 to-purple-600 hover:from-purple-600 hover:to-blue-600"
-                    : "from-blue-500 to-purple-500 hover:from-purple-500 hover:to-blue-500"
-                } text-white transition-all duration-300 transform hover:scale-105 shadow-lg group flex items-center justify-center gap-2`}
+                className={`w-full p-4 text-lg font-bold rounded-lg bg-gradient-to-br 
+                    from-blue-500 to-purple-500 hover:from-purple-500 hover:to-blue-500
+                    disabled:opacity-50 
+                 text-white transition-all duration-300 transform hover:scale-105 shadow-lg group flex items-center justify-center gap-2`}
                 variants={gravityEnabled ? fallingElementVariants : {}}
-                disabled={gravityEnabled}
+                disabled={gravityEnabled || sending}
               >
                 Send Message
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
