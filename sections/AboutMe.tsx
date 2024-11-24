@@ -3,7 +3,7 @@
 import { Github, Linkedin, Mail, Twitter } from "lucide-react";
 import { motion, useAnimation } from "framer-motion";
 import React, { useEffect, useRef, useState } from "react";
-import SocialButton from "./SocialButton";
+import SocialButton from "@/components/SocialButton";
 import avatarPng from "../public/assets/avatar.png";
 import Image from "next/image";
 
