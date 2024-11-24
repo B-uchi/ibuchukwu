@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import React, { useEffect, useRef, useState } from "react";
 import { motion, useAnimation } from "framer-motion";
 import Image from "next/image";
@@ -31,7 +31,7 @@ type Project = {
 const Projects: React.FC<ProjectsProps> = ({ theme, setIsThemeSection }) => {
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
-  const sectionRef = useRef<HTMLDivElement>(null);
+  const projectSectionRef = useRef<HTMLDivElement>(null);
   const controls = useAnimation();
   const hasMounted = useRef(false);
 
@@ -42,26 +42,24 @@ const Projects: React.FC<ProjectsProps> = ({ theme, setIsThemeSection }) => {
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting && hasMounted.current) {
-            console.log("intersecting");
             controls.start("visible");
             setIsThemeSection(false);
           } else if (!entry.isIntersecting && hasMounted.current) {
-            console.log("not intersecting");
             controls.start("hidden");
           }
         });
       },
-      { threshold: 0.7 }
+      { threshold: 0.2 }
     );
 
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
+    if (projectSectionRef.current) {
+      observer.observe(projectSectionRef.current);
     }
 
     return () => {
       hasMounted.current = false;
-      if (sectionRef.current) {
-        observer.unobserve(sectionRef.current);
+      if (projectSectionRef.current) {
+        observer.unobserve(projectSectionRef.current);
       }
     };
   }, [controls, setIsThemeSection]);
@@ -81,13 +79,9 @@ const Projects: React.FC<ProjectsProps> = ({ theme, setIsThemeSection }) => {
     fetchProjects();
   }, []);
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
   return (
     <div
-      ref={sectionRef}
+      ref={projectSectionRef}
       id="what-i-have-built"
       className={`relative min-h-screen flex flex-col ${
         theme === "dark"
@@ -98,10 +92,10 @@ const Projects: React.FC<ProjectsProps> = ({ theme, setIsThemeSection }) => {
       <section className="lg:grid flex flex-col-reverse justify-center lg:grid-cols-2 gap-8 items-center min-h-screen">
         <motion.div
           initial="hidden"
-          animate="visible"
+          animate={controls}
           variants={{
-            hidden: { opacity: 0, x: -100 },
-            visible: { opacity: 1, x: 0, transition: { duration: 0.8 } },
+            hidden: { opacity: 0, y: 200 },
+            visible: { opacity: 1, y: 0, transition: { duration: 0.8 } },
           }}
           className="flex flex-col justify-center px-8 md:px-[200px]"
         >
@@ -117,79 +111,85 @@ const Projects: React.FC<ProjectsProps> = ({ theme, setIsThemeSection }) => {
 
         <motion.div
           initial="hidden"
-          animate="visible"
+          animate={controls}
           variants={{
-            hidden: { opacity: 0, x: 100 },
+            hidden: { opacity: 0, x: 400 },
             visible: { opacity: 1, x: 0, transition: { duration: 0.8 } },
           }}
           className="flex gap-x-3 w-full overflow-scroll p-3 overflow-y-hidden"
         >
-          {projects.map((project, index) => (
-            <motion.div
-              key={index}
-              className={`p-4 flex flex-col justify-between flex-none w-[300px] rounded-lg shadow-lg font-josefin cursor-pointer ${
-                theme === "dark"
-                  ? "bg-[#313131] text-white"
-                  : "bg-gray-300 text-gray-800"
-              }`}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <Image
-                src={project.image}
-                alt={`${project.title} image`}
-                width={300}
-                height={200}
-                className="rounded-lg mb-4 h-[200px] object-cover"
-              />
-              <>
-                <h3 className="text-xl font-semibold mb-2">{project.title}</h3>
-                <p className="text-sm mb-4 line-clamp-3">
-                  {project.description}
-                </p>
-              </>
-              <>
-                <div className="flex flex-wrap gap-2 justify-between mb-4">
-                  {project.tags.map((tag, tagIndex) => (
-                    <span
-                      key={tagIndex}
-                      className={`px-2 py-1 text-xs font-medium rounded-md ${
-                        theme === "dark"
-                          ? "bg-gray-700 text-gray-300"
-                          : "bg-gray-200 text-gray-800"
-                      }`}
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-                <div className="flex gap-4 justify-center">
-                  <a
-                    href={project.repo_link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={`text-sm font-medium underline ${
-                      theme === "dark" ? "text-blue-400" : "text-blue-600"
-                    }`}
-                  >
-                    <Github />
-                  </a>
-                  {project.live_link && (
+          {loading ? (
+            <p>Loading...</p>
+          ) : (
+            projects.map((project, index) => (
+              <motion.div
+                key={index}
+                className={`p-4 flex flex-col justify-between flex-none w-[300px] rounded-lg shadow-lg font-josefin cursor-pointer ${
+                  theme === "dark"
+                    ? "bg-[#313131] text-white"
+                    : "bg-gray-300 text-gray-800"
+                }`}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <Image
+                  src={project.image}
+                  alt={`${project.title} image`}
+                  width={300}
+                  height={200}
+                  className="rounded-lg mb-4 h-[200px] object-cover"
+                />
+                <>
+                  <h3 className="text-xl font-semibold mb-2">
+                    {project.title}
+                  </h3>
+                  <p className="text-sm mb-4 line-clamp-3">
+                    {project.description}
+                  </p>
+                </>
+                <>
+                  <div className="flex flex-wrap gap-2 justify-between mb-4">
+                    {project.tags.map((tag, tagIndex) => (
+                      <span
+                        key={tagIndex}
+                        className={`px-2 py-1 text-xs font-medium rounded-md ${
+                          theme === "dark"
+                            ? "bg-gray-700 text-gray-300"
+                            : "bg-gray-200 text-gray-800"
+                        }`}
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                  <div className="flex gap-4 justify-center">
                     <a
-                      href={project.live_link}
+                      href={project.repo_link}
                       target="_blank"
                       rel="noopener noreferrer"
                       className={`text-sm font-medium underline ${
                         theme === "dark" ? "text-blue-400" : "text-blue-600"
                       }`}
                     >
-                      <Link />
+                      <Github />
                     </a>
-                  )}
-                </div>
-              </>
-            </motion.div>
-          ))}
+                    {project.live_link && (
+                      <a
+                        href={project.live_link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={`text-sm font-medium underline ${
+                          theme === "dark" ? "text-blue-400" : "text-blue-600"
+                        }`}
+                      >
+                        <Link />
+                      </a>
+                    )}
+                  </div>
+                </>
+              </motion.div>
+            ))
+          )}
         </motion.div>
       </section>
     </div>
