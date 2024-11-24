@@ -1,4 +1,3 @@
-import { useAnimation } from "framer-motion";
 import React, { useEffect, useRef } from "react";
 import SocialButton from "./SocialButton";
 import { socials } from "../sections/AboutMe";
@@ -12,6 +11,7 @@ const Footer: React.FC<FooterProps> = ({ theme, setIsThemeSection }) => {
   const footerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    const footerRefCurrent = footerRef.current;
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -30,8 +30,8 @@ const Footer: React.FC<FooterProps> = ({ theme, setIsThemeSection }) => {
     }
 
     return () => {
-      if (footerRef.current) {
-        observer.unobserve(footerRef.current);
+      if (footerRefCurrent) {
+        observer.unobserve(footerRefCurrent);
       }
     };
   }, [setIsThemeSection]);

@@ -15,22 +15,22 @@ export const socials = [
   {
     label: "Twitter",
     url: "https://twitter.com/yo_itz_buchi",
-    icon: <Twitter />,
+    Icon: Twitter,
   },
   {
     label: "Github",
     url: "https://github.com/B-uchi",
-    icon: <Github />,
+    Icon: Github,
   },
   {
     label: "Email",
     url: "mailto:ibumeano@gmail.com",
-    icon: <Mail />,
+    Icon: Mail,
   },
   {
     label: "LinkedIn",
     url: "https://www.linkedin.com/in/ibuchukwu-umeano-640a04224/",
-    icon: <Linkedin />,
+    Icon: Linkedin,
   },
 ];
 

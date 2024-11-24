@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Particles, { initParticlesEngine } from "@tsparticles/react";
 import { loadSlim } from "@tsparticles/slim"; // Lightweight particles library
-import type { Container, Engine } from "@tsparticles/engine";
+import type { Engine } from "@tsparticles/engine";
 
 type Props = {
   theme: string;

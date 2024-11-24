@@ -7,7 +7,6 @@ import {
   UserCog,
 } from "lucide-react";
 import { motion } from "framer-motion";
-import { useRouter } from "next/navigation";
 
 interface NavBarProps {
   theme: "light" | "dark";
@@ -21,7 +20,6 @@ const NavBar: React.FC<NavBarProps> = ({
   scrollContainerRef,
 }) => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  const router = useRouter();
 
   useEffect(() => {
     audioRef.current = new Audio("/click-sound.mp3"); // Preload sound
