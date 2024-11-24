@@ -4,17 +4,15 @@ import React, { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import Image from "next/image";
 import NavBar from "@/components/NavBar";
 import ParticleBackground from "@/components/ParticleBackground";
-import ThemeSection from "@/components/ThemeSection";
-import WhoAmI from "@/components/AboutMe";
-import ContactForm from "@/components/ContactForm";
+import ThemeSection from "@/sections/ThemeSection";
+import WhoAmI from "@/sections/AboutMe";
+import ContactForm from "@/sections/ContactForm";
 import Footer from "@/components/Footer";
-import WhatCanIDo from "@/components/WhatCanIDo";
-import ProjectSection from "@/components/ProjectSection";
+import WhatCanIDo from "@/sections/WhatCanIDo";
+import ProjectSection from "@/sections/ProjectSection";
 
-gsap.registerPlugin(ScrollTrigger);
 
 type Theme = "light" | "dark";
 
@@ -27,6 +25,12 @@ const Portfolio: React.FC = () => {
   const taglineRef = useRef<HTMLParagraphElement>(null);
   const themeSectionRef = useRef<HTMLDivElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      gsap.registerPlugin(ScrollTrigger);
+    }
+  }, []);
 
   useEffect(() => {
     const savedTheme = localStorage.getItem("theme") as Theme;

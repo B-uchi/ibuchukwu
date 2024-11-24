@@ -1,7 +1,7 @@
 import { useAnimation } from "framer-motion";
 import React, { useEffect, useRef } from "react";
 import SocialButton from "./SocialButton";
-import { socials } from "./AboutMe";
+import { socials } from "../sections/AboutMe";
 
 interface FooterProps {
   theme: "light" | "dark";
