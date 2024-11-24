@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from "react";
-import { motion } from "framer-motion";
+"use client"
+import React, { useEffect, useRef, useState } from "react";
+import { motion, useAnimation } from "framer-motion";
 import Image from "next/image";
-import imageUrlBuilder from "@sanity/image-url";
-import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
 import { client } from "@/util/sanity/client";
 import { Github, Link } from "lucide-react";
 
 interface ProjectsProps {
   theme: "light" | "dark";
+  setIsThemeSection: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const PROJECTS_QUERY = `*[_type == "project"]{
@@ -19,12 +19,6 @@ const PROJECTS_QUERY = `*[_type == "project"]{
   tags
 }`;
 
-const { projectId, dataset } = client.config();
-const urlFor = (source: SanityImageSource) =>
-  projectId && dataset
-    ? imageUrlBuilder({ projectId, dataset }).image(source)
-    : null;
-
 type Project = {
   title: string;
   description: string;
@@ -34,9 +28,43 @@ type Project = {
   tags: string[];
 };
 
-const Projects: React.FC<ProjectsProps> = ({ theme }) => {
+const Projects: React.FC<ProjectsProps> = ({ theme, setIsThemeSection }) => {
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const controls = useAnimation();
+  const hasMounted = useRef(false);
+
+  useEffect(() => {
+    hasMounted.current = true;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && hasMounted.current) {
+            console.log("intersecting");
+            controls.start("visible");
+            setIsThemeSection(false);
+          } else if (!entry.isIntersecting && hasMounted.current) {
+            console.log("not intersecting");
+            controls.start("hidden");
+          }
+        });
+      },
+      { threshold: 0.7 }
+    );
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
+
+    return () => {
+      hasMounted.current = false;
+      if (sectionRef.current) {
+        observer.unobserve(sectionRef.current);
+      }
+    };
+  }, [controls, setIsThemeSection]);
 
   useEffect(() => {
     const fetchProjects = async () => {
@@ -59,6 +87,7 @@ const Projects: React.FC<ProjectsProps> = ({ theme }) => {
 
   return (
     <div
+      ref={sectionRef}
       id="what-i-have-built"
       className={`relative min-h-screen flex flex-col ${
         theme === "dark"
@@ -66,7 +95,7 @@ const Projects: React.FC<ProjectsProps> = ({ theme }) => {
           : "bg-[#f4f4f4] text-gray-800"
       }`}
     >
-      <section className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center min-h-screen">
+      <section className="lg:grid flex flex-col-reverse justify-center lg:grid-cols-2 gap-8 items-center min-h-screen">
         <motion.div
           initial="hidden"
           animate="visible"
@@ -115,7 +144,9 @@ const Projects: React.FC<ProjectsProps> = ({ theme }) => {
               />
               <>
                 <h3 className="text-xl font-semibold mb-2">{project.title}</h3>
-                <p className="text-sm mb-4 line-clamp-3">{project.description}</p>
+                <p className="text-sm mb-4 line-clamp-3">
+                  {project.description}
+                </p>
               </>
               <>
                 <div className="flex flex-wrap gap-2 justify-between mb-4">

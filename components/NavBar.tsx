@@ -12,9 +12,14 @@ import { useRouter } from "next/navigation";
 interface NavBarProps {
   theme: "light" | "dark";
   setTheme: React.Dispatch<React.SetStateAction<"light" | "dark">>;
+  scrollContainerRef: React.RefObject<HTMLDivElement>;
 }
 
-const NavBar: React.FC<NavBarProps> = ({ theme, setTheme }) => {
+const NavBar: React.FC<NavBarProps> = ({
+  theme,
+  setTheme,
+  scrollContainerRef,
+}) => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const router = useRouter();
 
@@ -36,7 +41,13 @@ const NavBar: React.FC<NavBarProps> = ({ theme, setTheme }) => {
       audioRef.current.currentTime = 0;
       audioRef.current.play();
     }
-    router.push(`/#${section}`);
+    const sectionElement = document.getElementById(section);
+    if (section && scrollContainerRef.current) {
+      scrollContainerRef.current.scrollTo({
+        top: sectionElement?.offsetTop,
+        behavior: "smooth",
+      });
+    }
   };
 
   return (
@@ -49,39 +60,57 @@ const NavBar: React.FC<NavBarProps> = ({ theme, setTheme }) => {
       >
         <button
           onClick={() => changeSection("home")}
-          className="p-3 rounded-full hover:bg-blue-100 dark:hover:bg-gray-800 transition"
+          className="group relative p-3 rounded-full hover:bg-blue-100 dark:hover:bg-gray-800 transition"
         >
           <HomeIcon />
+          <span className="absolute bottom-full left-0 mb-4 w-max bg-black text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition">
+            Home
+          </span>
         </button>
         <button
           onClick={() => changeSection("who-am-i")}
-          className="p-3 rounded-full hover:bg-blue-100 dark:hover:bg-gray-800 transition"
+          className="group relative p-3 rounded-full hover:bg-blue-100 dark:hover:bg-gray-800 transition"
         >
           <UserCircleIcon />
+          <span className="absolute bottom-full left-0 mb-4 w-max bg-black text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition">
+            Who am I
+          </span>
         </button>
         <button
           onClick={() => changeSection("what-can-i-do")}
-          className="p-3 rounded-full hover:bg-blue-100 dark:hover:bg-gray-800 transition"
+          className="group relative p-3 rounded-full hover:bg-blue-100 dark:hover:bg-gray-800 transition"
         >
           <UserCog />
+          <span className="absolute bottom-full left-0 mb-4 w-max bg-black text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition">
+            What can i do
+          </span>
         </button>
         <button
           onClick={() => changeSection("what-i-have-built")}
-          className="p-3 rounded-full hover:bg-blue-100 dark:hover:bg-gray-800 transition"
+          className="group relative p-3 rounded-full hover:bg-blue-100 dark:hover:bg-gray-800 transition"
         >
           <CodeIcon />
+          <span className="absolute bottom-full left-0 mb-4 w-max bg-black text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition">
+            Projects
+          </span>
         </button>
         <button
           onClick={() => changeSection("contact-me")}
-          className="p-3 rounded-full hover:bg-blue-100 dark:hover:bg-gray-800 transition"
+          className="group relative p-3 rounded-full hover:bg-blue-100 dark:hover:bg-gray-800 transition"
         >
           <MailIcon />
+          <span className="absolute bottom-full left-0 mb-4 w-max bg-black text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition">
+            Contact
+          </span>
         </button>
         <button
-          className="p-3 rounded-full hover:bg-blue-100 dark:hover:bg-gray-800 transition"
           onClick={toggleTheme}
+          className="group relative p-3 rounded-full hover:bg-blue-100 dark:hover:bg-gray-800 transition"
         >
           {theme === "light" ? "🌙" : "☀️"}
+          <span className="absolute bottom-full left-0 mb-4 w-max bg-black text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition">
+            Theme
+          </span>
         </button>
       </motion.nav>
       <div className="fixed bottom-0 left-1/2 transform -translate-x-1/2 w-[80px] h-[3px] rounded-full mt-2 bg-[#b4aeae]"></div>

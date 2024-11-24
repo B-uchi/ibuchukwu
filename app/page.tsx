@@ -14,7 +14,6 @@ import Footer from "@/components/Footer";
 import WhatCanIDo from "@/components/WhatCanIDo";
 import ProjectSection from "@/components/ProjectSection";
 
-// Register GSAP plugins
 gsap.registerPlugin(ScrollTrigger);
 
 type Theme = "light" | "dark";
@@ -27,6 +26,7 @@ const Portfolio: React.FC = () => {
   const nameRef = useRef<HTMLSpanElement>(null);
   const taglineRef = useRef<HTMLParagraphElement>(null);
   const themeSectionRef = useRef<HTMLDivElement>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const savedTheme = localStorage.getItem("theme") as Theme;
@@ -47,8 +47,8 @@ const Portfolio: React.FC = () => {
       scrollTrigger: {
         trigger: containerRef.current,
         start: "top top",
-        end: "100%", // Provides ample scroll space
-        pin: true,
+        end: "100%",
+        // pin: true,
         scrub: 2,
       },
     });
@@ -116,21 +116,19 @@ const Portfolio: React.FC = () => {
       themeSectionRef.current,
       {
         opacity: 0,
-        y: 100, // Start slightly below its final position
-        scale: 0.8, // Start slightly smaller
+        y: 100,
+        scale: 0.8,
       },
       {
         opacity: 1,
-        y: 0, // Move to its final position
-        scale: 1, // Full scale
+        y: 0,
+        scale: 1,
         duration: 1.5,
         ease: "power2.out",
       },
-      // Position the theme section animation relative to the name scaling
-      `-=${nameScaleAnimation.duration() * 0.7}` // Start slightly before name scaling ends
+      `-=${nameScaleAnimation.duration() * 0.7}`
     );
 
-    // Debugging: Log animation details
     tl.eventCallback("onComplete", () => {
       setIsThemeSection(true);
     });
@@ -141,13 +139,13 @@ const Portfolio: React.FC = () => {
   }, []);
 
   return (
-    <>
+    <div ref={scrollContainerRef} className="h-screen w-full overflow-y-scroll snap-y snap-mandatory overflow-x-hidden">
       <div id="home"></div>
       <div
         ref={containerRef}
         className={`${
           theme === "dark" ? "bg-[#121212]" : "bg-[#f4f4f4]"
-        } transition-all min-h-screen relative overflow-hidden`}
+        } transition-all min-h-screen relative overflow-hidden snap-start`}
       >
         {/* Hero Section */}
         <section className="relative h-screen flex flex-col justify-center items-center text-center">
@@ -163,11 +161,11 @@ const Portfolio: React.FC = () => {
             <div className="sm:text-7xl mb-4 font-extrabold tracking-tight flex md:flex-row flex-col gap-[20px] text-5xl font-parkinsans">
               <h1
                 ref={greetingRef}
-                className={` ${
+                className={`${
                   theme == "dark" ? "text-white" : "text-gray-500"
                 }`}
               >
-                Hi, I'm
+                Hi, I&apos;m
               </h1>
               <span
                 ref={nameRef}
@@ -205,17 +203,19 @@ const Portfolio: React.FC = () => {
         <WhoAmI theme={theme} setIsThemeSection={setIsThemeSection} />
       </div>
       <div className="h-screen snap-start">
-        <WhatCanIDo theme={theme} />
+        <WhatCanIDo theme={theme} setIsThemeSection={setIsThemeSection} />
       </div>
       <div className="h-screen snap-start">
-        <ProjectSection theme={theme} />
+        <ProjectSection theme={theme} setIsThemeSection={setIsThemeSection} />
       </div>
       <div className="h-screen snap-start">
         <ContactForm theme={theme} setIsThemeSection={setIsThemeSection} />
       </div>
-      <Footer theme={theme} setIsThemeSection={setIsThemeSection} />
-      {!isThemeSection && <NavBar theme={theme} setTheme={setTheme} />}
-    </>
+      <div className="snap-start">
+        <Footer theme={theme} setIsThemeSection={setIsThemeSection} />
+      </div>
+      {!isThemeSection && <NavBar theme={theme} setTheme={setTheme} scrollContainerRef={scrollContainerRef}/>}
+    </div>
   );
 };
 

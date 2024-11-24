@@ -14,28 +14,27 @@ interface WhoAmIProps {
 export const socials = [
   {
     label: "Twitter",
-    url: "https://twitter.com/your_handle",
+    url: "https://twitter.com/yo_itz_buchi",
     icon: <Twitter />,
   },
   {
     label: "Github",
-    url: "https://github.com/your_handle",
+    url: "https://github.com/B-uchi",
     icon: <Github />,
   },
   {
     label: "Email",
-    url: "mailto:your_email@example.com",
+    url: "mailto:ibumeano@gmail.com",
     icon: <Mail />,
   },
   {
     label: "LinkedIn",
-    url: "https://linkedin.com/in/your_profile",
+    url: "https://www.linkedin.com/in/ibuchukwu-umeano-640a04224/",
     icon: <Linkedin />,
   },
 ];
 
 const WhoAmI: React.FC<WhoAmIProps> = ({ theme, setIsThemeSection }) => {
-  const [isInView, setIsInView] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
   const controls = useAnimation();
   const hasMounted = useRef(false);
@@ -47,16 +46,14 @@ const WhoAmI: React.FC<WhoAmIProps> = ({ theme, setIsThemeSection }) => {
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting && hasMounted.current) {
-            setIsInView(true);
             controls.start("visible");
             setIsThemeSection(false);
           } else if (!entry.isIntersecting && hasMounted.current) {
-            setIsInView(false);
             controls.start("hidden");
           }
         });
       },
-      { threshold: 0.7 } // Adjust as needed
+      { threshold: 0.7 } 
     );
 
     if (sectionRef.current) {
@@ -77,14 +74,14 @@ const WhoAmI: React.FC<WhoAmIProps> = ({ theme, setIsThemeSection }) => {
     <div
       id="who-am-i"
       ref={sectionRef}
-      className={`relative min-h-screen flex flex-col ${
+      className={`relative min-h-screen ${
         theme === "dark"
           ? "bg-[#121212] text-white"
           : "bg-[#f4f4f4] text-gray-800"
       }`}
     >
       {/* Content Section */}
-      <section className="grid grid-cols-1 md:grid-cols-2 gap-8 px-8 md:px-[200px] items-center min-h-screen">
+      <section className="lg:grid flex flex-col-reverse justify-center lg:grid-cols-2 gap-8 px-8 lg:px-[200px] items-center min-h-screen">
         <motion.div
           initial="hidden"
           animate={controls}
@@ -94,7 +91,7 @@ const WhoAmI: React.FC<WhoAmIProps> = ({ theme, setIsThemeSection }) => {
           }}
           className="flex flex-col justify-center"
         >
-          <h2 className="text-4xl md:text-5xl font-extrabold mb-6 font-parkinsans">
+          <h2 className="text-4xl md:text-5xl lg:text-left text-center font-extrabold mb-6 font-parkinsans">
             Who Am I?
           </h2>
           <p className="text-lg leading-relaxed font-josefin">
@@ -118,7 +115,7 @@ const WhoAmI: React.FC<WhoAmIProps> = ({ theme, setIsThemeSection }) => {
             hidden: { opacity: 0, x: 100 },
             visible: { opacity: 1, x: 0, transition: { duration: 0.8 } },
           }}
-          className="flex flex-col items-center justify-center space-y-8"
+          className="flex flex-col items-center justify-center space-y-8 -mt-14 lg:-mt-0"
         >
           <div
             className={`w-[256px] h-[256px] rounded-full shadow-lg flex items-center justify-center overflow-hidden ${

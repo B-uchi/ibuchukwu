@@ -18,7 +18,6 @@ const ContactForm: React.FC<ContactFormProps> = ({
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const contactRef = useRef<HTMLDivElement>(null);
 
-  // Animation variants for falling elements
   const containerVariants = {
     initial: {
       opacity: 1,
@@ -31,7 +30,6 @@ const ContactForm: React.FC<ContactFormProps> = ({
     },
   };
 
-  // Modified to fall within container
   const fallingElementVariants = {
     initial: { y: 0, rotate: 0 },
     animate: {
@@ -86,7 +84,7 @@ const ContactForm: React.FC<ContactFormProps> = ({
         isDark ? "bg-[#121212] text-white" : "bg-[#f4f4f4] text-gray-800"
       }`}
     >
-      <div className="w-full max-w-6xl h-screen flex justify-center items-center md:flex-row gap-8 md:gap-16 relative">
+      <div className="w-full max-w-6xl h-screen flex flex-col justify-center items-center lg:flex-row gap-8 lg:gap-16 relative">
         {/* Gravity Toggle */}
         <button
           onClick={() => {
@@ -104,7 +102,7 @@ const ContactForm: React.FC<ContactFormProps> = ({
         </button>
 
         <motion.div
-          className="flex-1 flex flex-col justify-center items-center md:items-start text-center md:text-left relative h-[500px] overflow-hidden"
+          className="lg:flex-1 flex flex-col justify-center items-center md:items-start text-center md:text-left relative lg:h-[500px] overflow-hidden"
           variants={gravityEnabled ? containerVariants : {}}
           initial="initial"
           animate="animate"
@@ -126,7 +124,7 @@ const ContactForm: React.FC<ContactFormProps> = ({
         </motion.div>
 
         {/* Right Column - Contact Form */}
-        <div className="flex-1 ">
+        <div className="lg:flex-1 w-[95%]">
           <motion.div
             className={`p-8 rounded-2xl relative h-[100%] pt-[40px] overflow-hidden`}
             variants={gravityEnabled ? containerVariants : {}}

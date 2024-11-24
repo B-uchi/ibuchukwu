@@ -1,19 +1,21 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { client } from "@/util/sanity/client";
 import Image from "next/image";
 
 interface WhatCanIDoProps {
   theme: "light" | "dark";
+  setIsThemeSection: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const SKILLS_QUERY = `*[_type == "skill"]`;
 type skills = [skill: { category: string; skills: any }];
 
-const WhatCanIDo: React.FC<WhatCanIDoProps> = ({ theme }) => {
+const WhatCanIDo: React.FC<WhatCanIDoProps> = ({ theme, setIsThemeSection }) => {
   const [skills, setSkills] = useState<skills | []>([]);
   const [activeTab, setActiveTab] = useState(0);
   const [loading, setLoading] = useState(true);
+  const sectionRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const fetchSkills = async () => {
@@ -30,6 +32,29 @@ const WhatCanIDo: React.FC<WhatCanIDoProps> = ({ theme }) => {
     fetchSkills();
   }, []);
 
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setIsThemeSection(false);
+          }
+        });
+      },
+      { threshold: 0.2 }
+    );
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
+
+    return () => {
+      if (sectionRef.current) {
+        observer.unobserve(sectionRef.current);
+      }
+    };
+  }, [setIsThemeSection]);
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -43,7 +68,7 @@ const WhatCanIDo: React.FC<WhatCanIDoProps> = ({ theme }) => {
           : "bg-[#f4f4f4] text-gray-800"
       }`}
     >
-      <section className="grid grid-cols-1 md:grid-cols-2 gap-8 px-8 md:px-[200px] items-center min-h-screen">
+      <section className="lg:grid flex flex-col justify-center lg:grid-cols-2 gap-8 px-8 md:px-[200px] items-center min-h-screen">
         <motion.div
           initial="hidden"
           animate="visible"
@@ -53,15 +78,15 @@ const WhatCanIDo: React.FC<WhatCanIDoProps> = ({ theme }) => {
           }}
           className="flex flex-col justify-center"
         >
-          <h2 className="text-4xl md:text-5xl font-extrabold mb-6 font-parkinsans">
+          <h2 className="text-4xl md:text-5xl lg:text-left text-center font-extrabold mb-6 font-parkinsans">
             What Can I Do?
           </h2>
-          <div className="flex space-x-6 mb-6">
+          <div className="flex lg:justify-normal justify-center space-x-6 mb-6">
             {skills.map((skill: any, index:number) => (
               <button
                 key={skill["Category"]}
                 onClick={() => setActiveTab(index)}
-                className={`px-3 py-2 text-[16px] font-semibold rounded-lg transition-all ${
+                className={`px-3 py-2 text-[13px] lg:text-[16px] font-semibold rounded-lg transition-all ${
                   activeTab === index
                     ? theme === "dark"
                       ? "bg-white text-black"
@@ -75,7 +100,7 @@ const WhatCanIDo: React.FC<WhatCanIDoProps> = ({ theme }) => {
               </button>
             ))}
           </div>
-          <p className="text-lg leading-relaxed font-josefin">
+          <p className="text-lg leading-relaxed font-josefin lg:text-left text-justify">
             Here&apos;s a breakdown of my technical skills categorized for
             clarity. I am proficient across both frontend and backend
             technologies, leveraging tools to deliver exceptional projects. With

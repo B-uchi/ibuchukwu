@@ -45,7 +45,7 @@ const Footer: React.FC<FooterProps> = ({ theme, setIsThemeSection }) => {
           : "bg-[#f4f4f4] text-gray-800"
       }`}
     >
-      <div className="container px-10 mx-auto flex items-center justify-between">
+      <div className="container px-10 mx-auto flex lg:flex-row flex-col-reverse gap-3 lg:gap-0 items-center justify-between">
         <p className="text-[16px] font-josefin">
           © {new Date().getFullYear()} Ibuchukwu. <span>All rights reserved.</span>
         </p>
