@@ -8,6 +8,13 @@ html {
   scroll-behavior: smooth;
 }
 
+.toast-container{
+  z-index: 50;
+}
+.toast {
+  font-family: "Josefin Sans" !important;
+  color: black;
+}
 
 * {
   /* For Webkit browsers (Chrome, Safari) */
