@@ -1,0 +1,83 @@
+@import url("https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&family=Edu+AU+VIC+WA+NT+Arrows:wght@400..700&family=Nova+Flat&family=Parkinsans:wght@300..800&display=swap");
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* styles/globals.css */
+
+/* Modern scrollbar styling */
+* {
+  /* For Webkit browsers (Chrome, Safari) */
+  &::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #666;
+    border-radius: 10px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: #888;
+  }
+
+  /* For Firefox */
+  scrollbar-width: thin;
+  scrollbar-color: #666 transparent;
+}
+
+/* Optional: Hide scrollbar when not scrolling */
+.scrollbar-hide {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+  
+  &::-webkit-scrollbar {
+    display: none;  /* Chrome, Safari and Opera */
+  }
+}
+
+/* Optional: Show scrollbar only on hover */
+.scrollbar-hide-until-hover {
+  &::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+  }
+
+  &:hover::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+  }
+
+  &:hover::-webkit-scrollbar-thumb {
+    background: #666;
+  }
+}
+
+/* Dark mode variants */
+.dark * {
+  &::-webkit-scrollbar-thumb {
+    background: #888;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: #999;
+  }
+
+  scrollbar-color: #888 transparent;
+}
