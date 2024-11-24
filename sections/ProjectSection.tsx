@@ -94,7 +94,7 @@ const Projects: React.FC<ProjectsProps> = ({ theme, setIsThemeSection }) => {
           initial="hidden"
           animate={controls}
           variants={{
-            hidden: { opacity: 0, y: 200 },
+            hidden: { opacity: 0, y: 100 },
             visible: { opacity: 1, y: 0, transition: { duration: 0.8 } },
           }}
           className="flex flex-col justify-center px-8 md:px-[200px]"
