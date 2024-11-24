@@ -94,7 +94,7 @@ const WhoAmI: React.FC<WhoAmIProps> = ({ theme, setIsThemeSection }) => {
           <h2 className="text-4xl md:text-5xl lg:text-left text-center font-extrabold mb-6 font-parkinsans">
             Who Am I?
           </h2>
-          <p className="text-lg leading-relaxed font-josefin">
+          <p className="text-lg leading-relaxed font-josefin lg:text-left text-justify">
             Hey there! I'm Ibuchukwu, a passionate full-stack developer with a
             knack for solving problems and bringing ideas to life through clean,
             efficient, and scalable code. I thrive in creating engaging user
