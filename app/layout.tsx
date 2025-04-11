@@ -53,7 +53,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className="antialiased"
+        className="antialiased e60b5b9c-c6e4-4b72-ad1c-efc7bed670d8"
       >
         {children}
       </body>
